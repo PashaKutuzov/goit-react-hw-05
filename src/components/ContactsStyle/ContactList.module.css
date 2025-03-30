@@ -1,0 +1,10 @@
+.item{
+    border: 2px solid black;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+.listItem{
+display: flex;
+gap: 20px;
+}
