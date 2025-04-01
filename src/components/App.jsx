@@ -1,78 +1,44 @@
 import "./App.css";
-import SearchBar from "./SearchBar";
-import Loader from "./Loader";
-import LoadMoreBtn from "./LoadMoreBtn";
-import ErrorMessage from "./ErrorMessage";
-import ImageGallery from "./ImageGallery";
-import { useState, useEffect } from "react";
-import { fetchPhotosWithTopic } from "../search-api";
-import ImageModal from "./ImageModal";
+import { Route, Routes } from "react-router-dom";
+import { lazy, Suspense } from "react";
+
+import Navigation from "./Navigation";
+// import HomePage from "../pages/HomePage";
+// import MoviesPage from "../pages/MoviesPage";
+// import NotFoundPage from "../pages/NotFoundPage";
+// import MovieDetailsPage from "../pages/MovieDetailsPage";
+import MovieReviews from "./MovieReviews";
+import MovieCast from "./MovieCast";
+
+
+const HomePage = lazy(() => import ("../pages/HomePage"))
+const MoviesPage = lazy(() => import ("../pages/MoviesPage"))
+const MovieDetailsPage = lazy(() => import ("../pages/MovieDetailsPage"))
+const NotFoundPage = lazy(() => import ("../pages/NotFoundPage"))
+
+
+
 function App() {
-  const [photos, setPhotos] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = (image) => {
-    setSelectedImage(image);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setSelectedImage(null);
-    setIsModalOpen(false);
-  };
-
-  const handleSubmit = (topic) => {
-    setPhotos([]);
-
-    setSearch(topic);
-    setPage(1);
-  };
-
-  useEffect(() => {
-    if (search === "") {
-      return;
-    }
-
-    async function getData() {
-      try {
-        setLoading(true);
-        setError(false);
-        const data = await fetchPhotosWithTopic(search, page);
-        setPhotos((prevPhotos) => {
-          return [...prevPhotos, ...data];
-        });
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    getData();
-  }, [page, search]);
+ 
 
   return (
-    <>
-      <SearchBar onSubmit={handleSubmit} />
+   <div>
+    <Navigation />
+<Suspense fallback={'Loading page...'}>
+    <Routes>
+      <Route path="/" element={<HomePage/>}/>
+      <Route path="/movies" element={<MoviesPage/>}/>
 
-      {error && <ErrorMessage />}
-      {photos.length > 0 && <ImageGallery items={photos} openModal={openModal}/>}
-      {loading && <Loader />}
-      {photos.length > 0 && (
-        <LoadMoreBtn onClick={() => setPage(page + 1)} Page={page} />
-      )}
-
-      <ImageModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        image={selectedImage}
-      />
-    </>
+      <Route path="/movies/:movieId" element={<MovieDetailsPage/>}>
+      <Route path="cast" element={<MovieCast/>}/>
+      <Route path="reviews" element={<MovieReviews/>}/>
+      </Route>
+      
+      <Route path="*" element={<NotFoundPage/>}/>
+    </Routes>
+    </Suspense>
+   </div>
+    
   );
 }
 

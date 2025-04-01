@@ -1,0 +1,16 @@
+
+
+.list{
+    display: flex;
+    flex-direction: column;
+    
+}
+.listItem{
+   
+    list-style-type:circle
+}
+
+.link{
+    text-decoration: underline;
+    color:rgb(124, 124, 255);
+}

@@ -1,0 +1,17 @@
+.formContainer{
+    margin-top: 20px;
+    padding-left: 40px;
+}
+.form{
+  display: flex;
+    
+}
+.input{
+    background-color: white;
+    border-color: rgb(124, 124, 255);
+    color: black;
+}
+.submitBtn{
+border-radius: 0%;
+background-color: rgb(124, 124, 255);
+}
